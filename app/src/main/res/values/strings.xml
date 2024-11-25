@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Temperatura_Umidade</string>
+    <string name="dd_mm_aaaa" />
+</resources>

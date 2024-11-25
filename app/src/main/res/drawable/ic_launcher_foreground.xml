@@ -1,0 +1,31 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="72"
+    android:viewportHeight="72">
+
+    <!-- Tubo do termômetro -->
+    <path
+        android:fillColor="#B0BEC5"
+        android:pathData="M34,10h4v48h-4z" />
+
+    <!-- Parte interna branca do tubo -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M35,30h2v28h-2z" />
+
+    <!-- Bulbo do termômetro (contorno) -->
+    <path
+        android:fillColor="#B0BEC5"
+        android:pathData="M36,48c6,0 12,4 12,12s-6,12 -12,12 -12,-4 -12,-12 6,-12 12,-12z" />
+
+    <!-- Parte interna branca do bulbo -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M36,50c5,0 10,3 10,10s-5,10 -10,10 -10,-3 -10,-10 5,-10 10,-10z" />
+
+    <!-- Linha vermelha indicando o nível de temperatura -->
+    <path
+        android:fillColor="#FF0000"
+        android:pathData="M35,22h2v18h-2z" />
+</vector>
