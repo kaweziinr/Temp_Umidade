@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Umidade e Temperatura</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Adicionando as formas geométricas no plano de fundo com animação */
+        .background-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .background-shapes .circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            background-color: #007BFF;
+            animation: move 10s infinite linear;
+        }
+
+        .background-shapes .circle.small {
+            width: 180px;  /* Aumentei o tamanho do círculo pequeno */
+            height: 180px; /* Aumentei o tamanho do círculo pequeno */
+            top: 20%;
+            left: 10%;
+        }
+
+        .background-shapes .circle.medium {
+            width: 280px;  /* Aumentei o tamanho do círculo médio */
+            height: 280px; /* Aumentei o tamanho do círculo médio */
+            top: 50%;
+            left: 60%;
+        }
+
+        .background-shapes .circle.large {
+            width: 400px;  /* Aumentei o tamanho do círculo grande */
+            height: 400px; /* Aumentei o tamanho do círculo grande */
+            top: 70%;
+            left: 20%;
+        }
+
+        /* Definindo a animação de movimento */
+        @keyframes move {
+            0% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(150px, 100px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        h1 {
+            text-align: center;
+            color: #4b4f58;
+            margin-top: 30px;
+            font-size: 2.5rem;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        label {
+            font-size: 16px;
+            color: #4b4f58;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        input[type="date"] {
+            width: 80%;
+            padding: 12px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #fafafa;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="date"]:focus {
+            border-color: #007BFF;
+            outline: none;
+        }
+
+        button {
+            width: 48%;
+            background-color: #007BFF;
+            color: #fff;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 10px 1%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);  /* Efeito de aumento do botão ao passar o mouse */
+        }
+
+        button i {
+            margin-right: 8px;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        button:hover i {
+            transform: rotate(20deg); /* Rotaciona o ícone ao passar o mouse */
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            border: 1px solid #bbdefb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .result h3 {
+            margin-top: 0;
+            color: #1e88e5;
+        }
+
+        .result ul {
+            padding-left: 20px;
+        }
+
+        .result ul li {
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .result strong {
+            color: #d32f2f;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            button {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            input[type="date"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Formas de fundo com animação -->
+    <div class="background-shapes">
+        <div class="circle small"></div>
+        <div class="circle medium"></div>
+        <div class="circle large"></div>
+    </div>
+
+    <h1>Controle de Umidade e Temperatura</h1>
+
+    <div class="container">
+        <label for="dataHora">Selecione uma data:</label>
+        <input type="date" id="dataHora" name="dataHora">
+
+        <div>
+            <button id="verificarButton"><i class="fas fa-search"></i> Verificar</button>
+            <button id="verTodosButton"><i class="fas fa-eye"></i> Ver Todos</button> <!-- Botão "Ver Todos" -->
+        </div>
+
+        <div id="resultado" class="result"></div>
+    </div>
+
+    <script>
+        document.getElementById("verificarButton").addEventListener("click", function() {
+            const dataHora = document.getElementById("dataHora").value;
+
+            if (!dataHora) {
+                alert("Por favor, selecione uma data.");
+                return;
+            }
+
+            fetch('/verificar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dataHora: dataHora })
+            })
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar dados:', error);
+                document.getElementById("resultado").innerHTML = `<strong>Erro ao buscar dados. Tente novamente mais tarde.</strong>`;
+            });
+        });
+
+        document.getElementById("verTodosButton").addEventListener("click", function() {
+            fetch('/ver-todos')
+            .then(response => response.json())
+            .then(data => {
+                displayResults(data);
+            })
+            .catch(error => {
+                console.error('Erro ao buscar todos os dados:', error);
+                document.getElementById("resultado").innerHTML = `<strong>Erro ao buscar dados. Tente novamente mais tarde.</strong>`;
+            });
+        });
+
+        function displayResults(data) {
+            const resultadosDiv = document.getElementById("resultado");
+            if (data.message) {
+                resultadosDiv.innerHTML = `<strong>${data.message}</strong>`;
+            } else {
+                let resultHTML = "<h3>Dados encontrados:</h3><ul>";
+                data.forEach(item => {
+                    resultHTML += `<li><strong>Data:</strong> ${item.dataHora} | <strong>Temperatura:</strong> ${item.temperatura}°C | <strong>Umidade:</strong> ${item.umidade}%</li>`;
+                });
+                resultHTML += "</ul>";
+                resultadosDiv.innerHTML = resultHTML;
+            }
+        }
+    </script>    
+
+</body>
+</html>
